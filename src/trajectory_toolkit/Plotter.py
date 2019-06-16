@@ -59,7 +59,7 @@ class Plotter:
         
     def refreshSingleLine(self,lineID):
         figure(self.figureId)
-        stepSize = floor(self.td[lineID].end()/self.maxPoints)+1;
+        stepSize = int(floor(self.td[lineID].end()/self.maxPoints))+1;
         self.lines[lineID].set_xdata(self.td[lineID].col(0)[0::stepSize])
         self.lines[lineID].set_ydata(self.td[lineID].col(self.colIDs[lineID])[0::stepSize])
         self.axes[lineID].relim()
@@ -99,7 +99,7 @@ class Plotter:
     def refresh(self): # More efficient than refreshSingleLine
         figure(self.figureId)
         for i in xrange(0,len(self.colIDs)):
-            stepSize = floor(self.td[i].end()/self.maxPoints)+1;
+            stepSize = int(floor(self.td[i].end()/self.maxPoints))+1;
             self.lines[i].set_xdata(self.td[i].col(0)[0::stepSize])
             self.lines[i].set_ydata(self.td[i].col(self.colIDs[i])[0::stepSize])
             self.axes[i].relim()
