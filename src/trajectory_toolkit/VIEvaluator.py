@@ -152,6 +152,7 @@ class VIEvaluator:
         self.td.cropTimes(self.tdgt.getFirstTime(),self.tdgt.getLastTime())
     
     def alignBodyFrame(self):
+        #if(self.extraTransformPos.any() != None or self.extraTransformAtt.any() != None):
         if(self.extraTransformPos != None or self.extraTransformAtt != None):
             if(self.alignMode == 0 or self.alignMode == 2):
                 self.tdgt.applyBodyTransformFull('pos', 'att','vel', 'ror', self.extraTransformPos, self.extraTransformAtt)
