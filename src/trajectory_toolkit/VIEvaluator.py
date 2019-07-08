@@ -148,6 +148,7 @@ class VIEvaluator:
         self.td.computeNormOfColumns('ror','ron')
         self.td.applyTimeOffset(self.tdgt.getFirstTime()-self.td.getFirstTime())
         to = self.td.getTimeOffset('ron',self.tdgt,'ron')
+        print('Time offset filter to vicon is:' + str(to))
         self.td.applyTimeOffset(-to)
         self.td.cropTimes(self.tdgt.getFirstTime(),self.tdgt.getLastTime())
     

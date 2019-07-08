@@ -119,6 +119,18 @@ def addImuWithCovariance(td, ind, msg, gyr = None, acc = None, gyrCov = None, ac
         td.d[ind, accCovID] = np.array([msg.linear_acceleration_covariance[0],msg.linear_acceleration_covariance[1],msg.linear_acceleration_covariance[2],
                                                        msg.linear_acceleration_covariance[3],msg.linear_acceleration_covariance[4],msg.linear_acceleration_covariance[5],
                                                        msg.linear_acceleration_covariance[6],msg.linear_acceleration_covariance[7],msg.linear_acceleration_covariance[8]]);
+                                                      
+def addImuWithOrientation(td, ind, msg, gyr = None, acc = None, orient = None):
+    gyrID = td.getColIDs(gyr)
+    if gyrID != None:
+        td.d[ind, gyrID] = np.array([msg.angular_velocity.x,msg.angular_velocity.y,msg.angular_velocity.z]);
+    accID = td.getColIDs(acc)
+    if accID != None:
+        td.d[ind, accID] = np.array([msg.linear_acceleration.x,msg.linear_acceleration.y,msg.linear_acceleration.z]);    
+    orientID = td.getColIDs(orient)
+    if orientID != None:
+        td.d[ind, orientID] = np.array([msg.orientation.w, msg.orientation.x,msg.orientation.y,msg.orientation.z]);
+
 # Listener on a Trans
 class TransformStampedListener:
     td = TimedData(0)
@@ -245,6 +257,24 @@ def rosBagLoadImuWithCovariance(filename, topic, td, gyr = None, acc = None, gyr
                 c = td.last
                 td.d[c, td.timeID] = msg.header.stamp.to_sec();
             addImuWithCovariance(td, c, msg, gyr, acc, gyrCov, accCov)
+            c += 1
+    else:
+        print('Implement functionality when timedata is not empty');
+    bag.close()
+    
+def rosBagLoadImuWithOrientation(filename, topic, td, gyr = None, acc = None, orient = None):
+    bag = rb.Bag(filename)
+    count = rosBagCountTopic(bag,topic)
+    print("loading " + filename + ", found " + str(count) +" "+ topic +" entries")
+    notEmpty = (td.last > -1)
+    c = 0
+    if((not notEmpty) or td.last+1 == count):
+        for top, msg, t in bag.read_messages(topics=[topic]):
+            if(not notEmpty):
+                td.append()
+                c = td.last
+                td.d[c, td.timeID] = msg.header.stamp.to_sec();
+            addImuWithOrientation(td, c, msg, gyr, acc, orient)
             c += 1
     else:
         print('Implement functionality when timedata is not empty');

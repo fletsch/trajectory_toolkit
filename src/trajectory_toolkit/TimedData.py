@@ -7,6 +7,7 @@ import Utils
 from numpy import arange
 from locale import str
 import pickle
+import os
 
 class TimedData:
     # Data numpy array
@@ -578,6 +579,22 @@ class TimedData:
                 data = data + separator + str(extractedCols[i,j])
             with open(fileOut, 'w') as infoFile:
                 infoFile.write(data)
+                
+    def writeColsToFile(self, folder, name, cols, separator = ','):
+        Utils.createFolderIfMissing(folder)
+        extractedCols = self.col(cols)
+        if os.path.isfile(folder + '/' + name + '.txt' ):
+            print('Filename already exists, give a new name')
+            return -1
+        fileOut = folder + '/' + name + '.txt'
+        for i in range(0,self.length()):
+            data = str(extractedCols[i,0])
+            for j in range(1,len(cols)):
+                data = data + separator + str(extractedCols[i,j])
+            with open(fileOut, 'a+') as infoFile:
+                infoFile.write(data)
+                infoFile.write('\n')
+                
             
 
 
